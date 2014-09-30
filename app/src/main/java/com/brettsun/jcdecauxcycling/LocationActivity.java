@@ -1,19 +1,16 @@
 package com.brettsun.jcdecauxcycling;
 
 import android.app.ActionBar;
-import android.app.Activity;
+import android.app.ListActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
-import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.JsonArrayRequest;
 
-import org.json.JSONObject;
+import org.json.JSONArray;
 
 /**
  * Location selection activity. Loads a list of cities to select.
@@ -25,14 +22,14 @@ import org.json.JSONObject;
  * which "station_number"s associated with each of them for the next activity.
  * Could be done, but not too interesting right now.
  */
-public class LocationActivity extends Activity {
+public class LocationActivity extends ListActivity {
 
     private static final String TAG = "LocationActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_location_selector);
+        setContentView(R.layout.activity_location);
 
         ActionBar actionBar = getActionBar();
         if (actionBar != null) {
@@ -45,21 +42,15 @@ public class LocationActivity extends Activity {
     private void requestContractsJson() {
         Log.i(TAG, "Requesting contracts JSON...");
         VolleyHandler volleyHandler = VolleyHandler.getInstance(this);
-        JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.GET, NetworkUtils.CONTRACTS_ENDPOINT, null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Log.i(TAG, "JSON request for contracts succeeded");
-                        // Got JSON response, parse it and inflate locations adapter
-                        //TODO
+        JsonArrayRequest jsonRequest = new JsonArrayRequest(NetworkUtils.contractsUrlWithParams(),
+            new Response.Listener<JSONArray>() {
+                @Override
+                public void onResponse(JSONArray response) {
+                    Log.i(TAG, "JSON request for contracts succeeded");
+                    // Got JSON response, parse it and inflate locations adapter
 
-                        // Change the views to the listview
-                        ViewGroup rootLayout = (ViewGroup) findViewById(R.id.location_activity_root_container);
-                        rootLayout.removeAllViews();
-                        LayoutInflater inflater = getLayoutInflater();
-                        inflater.inflate(R.layout.activity_location_base, rootLayout, true);
-                    }
-                }, new Response.ErrorListener() {
+                }
+            }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 // Failed to get JSON response; hide progress bar and inflate retry button

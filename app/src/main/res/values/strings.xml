@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">JCDecaux Cycling</string>
+    <string name="title_activity_location">Location</string>
+
+    <!-- Text -->
+    <string name="network_failed_text">Oops! Something went wrong. Please check your network and retry later.</string>
+
+    <!-- Button messages -->
+    <string name="network_retry_button">Retry</string>
+
+</resources>

@@ -2,15 +2,20 @@ package com.brettsun.jcdecauxcycling;
 
 import android.app.ActionBar;
 import android.app.ListActivity;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ListView;
+import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 
 import org.json.JSONArray;
+
+import java.util.ArrayList;
 
 /**
  * Location selection activity. Loads a list of cities to select.
@@ -21,10 +26,13 @@ import org.json.JSONArray;
  * at this granularity unless we do some bookkeeping ourselves to know which cities have
  * which "station_number"s associated with each of them for the next activity.
  * Could be done, but not too interesting right now.
+ *
+ * TODO: handle config changes nicely
  */
 public class LocationActivity extends ListActivity {
 
     private static final String TAG = "LocationActivity";
+    private final Context mContext = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,9 +54,12 @@ public class LocationActivity extends ListActivity {
             new Response.Listener<JSONArray>() {
                 @Override
                 public void onResponse(JSONArray response) {
-                    Log.i(TAG, "JSON request for contracts succeeded");
                     // Got JSON response, parse it and inflate locations adapter
+                    Log.i(TAG, "JSON request for contracts succeeded");
 
+                    ArrayList<Contract> contracts = Contract.parseFromJson(response);
+                    ContractAdapter contractAdapter = new ContractAdapter(mContext, contracts.toArray(new Contract[contracts.size()]));
+                    setListAdapter(contractAdapter);
                 }
             }, new Response.ErrorListener() {
             @Override
@@ -81,6 +92,13 @@ public class LocationActivity extends ListActivity {
             findViewById(R.id.network_failed_text).setVisibility(View.VISIBLE);
             findViewById(R.id.network_retry_button).setVisibility(View.VISIBLE);
         }
+    }
+
+    @Override
+    public void onListItemClick(ListView listView, View view, int position, long id) {
+        //FIXME: launch activity instead
+        Toast toast = Toast.makeText(this, "clicked position " + position + " and id " + id, Toast.LENGTH_LONG);
+        toast.show();
     }
 
 }

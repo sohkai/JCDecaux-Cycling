@@ -43,14 +43,14 @@ public class Contract {
                 ex.printStackTrace();
             }
         }
-
         return contractList;
     }
 
-    // Contracts must be created by parsing through the JSON returned
+    // Contracts must be created by parsing through the JSON returned from the API
     private Contract(String name, String commercialName, String country) {
         mName = name;
         mCommercialName = commercialName;
         mCountry = country;
     }
+
 }

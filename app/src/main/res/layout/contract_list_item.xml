@@ -1,17 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <TextView android:id="@+id/contract_location"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@id/contract_progress_bar"
+        android:singleLine="true"
         />
 
     <TextView android:id="@+id/contract_commercial_name"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/contract_location"
+        android:layout_toLeftOf="@id/contract_progress_bar"
+        android:singleLine="true"
         />
 
-</LinearLayout>
+    <!-- progressbar id defined in res/values/ids.xml to avoid circular dependency -->
+    <ProgressBar android:id="@id/contract_progress_bar"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@id/contract_location"
+        android:layout_alignBottom="@id/contract_commercial_name"
+        android:visibility="gone"
+        />
+
+</RelativeLayout>

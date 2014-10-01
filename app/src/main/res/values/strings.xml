@@ -2,12 +2,22 @@
 <resources>
 
     <string name="app_name">JCDecaux Cycling</string>
+    <string name="google_maps_key">AIzaSyDzpAIsR6587yhqcGobeEYrjUgr_vxx_JA</string>
     <string name="title_activity_location">Location</string>
+    <string name="title_activity_station">Stations</string>
 
     <!-- Text -->
+    <string name="emtpy_station_list">Hmm&#8230; there doesn\'t appear to be any stations for this location. Something probably went wrong on our side. Please try again later.</string>
+    <string name="maps_no_station">Oops! We weren\'t able to find the station requested.</string>
     <string name="network_failed_text">Oops! Something went wrong. Please check your network and retry later.</string>
 
     <!-- Button messages -->
     <string name="network_retry_button">Retry</string>
+    <string name="title_activity_station_map">Station Location</string>
+
+    <!-- Dialog messages -->
+    <string name="cancel">Cancel</string>
+    <string name="maps_directions_message">Get directions?</string>
+    <string name="maps_get_directions">Yes</string>
 
 </resources>

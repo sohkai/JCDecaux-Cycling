@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Defined contract_progress_bar id here to avoid circular dependency in contract_list_item.xml -->
+    <item type="id" name="contract_progress_bar" />
+</resources>

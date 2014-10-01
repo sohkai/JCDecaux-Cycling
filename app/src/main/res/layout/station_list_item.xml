@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView android:id="@+id/station_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:singleLine="true"
+        android:text="ASDFASDFAASDFASDF"
+        />
+
+    <TextView android:id="@+id/station_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@id/station_status"
+        android:paddingRight="40dp"
+        android:singleLine="true"
+        android:text="testasdfasdfasfdasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasfd1"
+        />
+
+    <TextView android:id="@+id/station_address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/station_name"
+        android:singleLine="true"
+        android:text="test2"
+        />
+
+    <TextView android:id="@+id/station_available_bikes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/station_address"
+        android:singleLine="true"
+        android:text="10"
+        />
+
+    <TextView android:id="@+id/station_available_stands"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/station_address"
+        android:layout_toRightOf="@id/station_available_bikes"
+        android:paddingLeft="30dp"
+        android:singleLine="true"
+        android:text="15"
+        />
+
+</RelativeLayout>

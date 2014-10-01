@@ -9,6 +9,9 @@ import android.widget.TextView;
 
 public class ContractAdapter extends ArrayAdapter<Contract> {
 
+    private static final String CITY_TEXT = "City: ";
+    private static final String COMMERCIAL_NAME_TEXT = "Company: ";
+
     private Contract mContracts[];
 
     ContractAdapter(Context context, Contract[] contracts) {
@@ -27,11 +30,12 @@ public class ContractAdapter extends ArrayAdapter<Contract> {
         }
 
         Contract contract = mContracts[position];
-        TextView textLocation = (TextView)rowView.findViewById(R.id.contract_location);
-        TextView textCommercialName = (TextView)rowView.findViewById(R.id.contract_commercial_name);
-        textLocation.setText("City: " + contract.getName() + ", " + contract.getCountry());
-        textCommercialName.setText("Company: " + contract.getCommercialName());
+        TextView textLocation = (TextView) rowView.findViewById(R.id.contract_location);
+        TextView textCommercialName = (TextView) rowView.findViewById(R.id.contract_commercial_name);
+        textLocation.setText(CITY_TEXT + contract.getName() + ", " + contract.getCountry());
+        textCommercialName.setText(COMMERCIAL_NAME_TEXT + contract.getCommercialName());
 
         return rowView;
     }
+
 }

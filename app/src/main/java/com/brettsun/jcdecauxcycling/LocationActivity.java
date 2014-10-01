@@ -3,6 +3,7 @@ package com.brettsun.jcdecauxcycling;
 import android.app.ActionBar;
 import android.app.ListActivity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -32,7 +33,9 @@ import java.util.ArrayList;
 public class LocationActivity extends ListActivity {
 
     private static final String TAG = "LocationActivity";
+
     private final Context mContext = this;
+    private View mSelectedProgressBar = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +50,23 @@ public class LocationActivity extends ListActivity {
         requestContractsJson();
     }
 
+    @Override
+    public void onListItemClick(ListView listView, View view, int position, long id) {
+        Log.i(TAG, "Contract at position " + position + " with id " + id + " clicked");
+
+        // Disable clicks on ListView to prevent trying to select two locations
+        listView.setFocusable(false);
+        // Show progressbar to let user know we're loading stations
+        mSelectedProgressBar = view.findViewById(R.id.contract_progress_bar);
+        mSelectedProgressBar.setVisibility(View.VISIBLE);
+
+        // Make network request for stations associated with location and launch activity
+        // if json is received
+        String contractName = ((Contract) listView.getItemAtPosition(position)).getName();
+        requestStationsJson(contractName);
+    }
+
+    /********* For contracts api *************/
     private void requestContractsJson() {
         Log.i(TAG, "Requesting contracts JSON...");
         VolleyHandler volleyHandler = VolleyHandler.getInstance(this);
@@ -62,12 +82,12 @@ public class LocationActivity extends ListActivity {
                     setListAdapter(contractAdapter);
                 }
             }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                // Failed to get JSON response; hide progress bar and inflate retry button
-                Log.i(TAG, "JSON request for contracts failed. Received status code: " + error.networkResponse.statusCode);
-                toggleNetworkActivityLayout(false);
-            }
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    // Failed to receive JSON response; hide progress bar and inflate retry button
+                    Log.i(TAG, "JSON request for contracts failed. Received status code: " + error.networkResponse.statusCode);
+                    toggleNetworkActivityLayout(false);
+                }
         });
 
         // Add this json request to the volley queue
@@ -94,11 +114,45 @@ public class LocationActivity extends ListActivity {
         }
     }
 
-    @Override
-    public void onListItemClick(ListView listView, View view, int position, long id) {
-        //FIXME: launch activity instead
-        Toast toast = Toast.makeText(this, "clicked position " + position + " and id " + id, Toast.LENGTH_LONG);
-        toast.show();
+    /********* For stations api *************/
+    private void requestStationsJson(String contractName) {
+        Log.i(TAG, "Requesting stations JSON for: " + contractName);
+        VolleyHandler volleyHandler = VolleyHandler.getInstance(this);
+        JsonArrayRequest jsonRequest = new JsonArrayRequest(NetworkUtils.stationsUrlWithParams(contractName),
+            new Response.Listener<JSONArray>() {
+                @Override
+                public void onResponse(JSONArray response) {
+                    // Got JSON response, launch the station activity and send it the station JSON
+                    Log.i(TAG, "JSON request for stations succeeded");
+                    hideSelectedProgressBar();
+
+                    Intent stationActivityIntent = new Intent(mContext, StationActivity.class);
+                    // Must send the response as a string for the extra
+                    stationActivityIntent.putExtra(StationActivity.STATIONS_JSON_EXTRA, response.toString());
+                    Log.i(TAG, "Starting station activity...");
+                    startActivity(stationActivityIntent);
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    // Failed to receive JSON response, tell user and reset state
+                    Log.i(TAG, "JSON request for stations failed. Received status code: " + error.networkResponse.statusCode);
+                    Toast toast = Toast.makeText(mContext, R.string.network_failed_text, Toast.LENGTH_SHORT);
+                    toast.show();
+                    hideSelectedProgressBar();
+                    getListView().setFocusable(true);
+                }
+        });
+
+        volleyHandler.addToRequestQueue(jsonRequest);
+        Log.i(TAG, "Added JSON request for station: " + contractName + " to volley");
+    }
+
+    private void hideSelectedProgressBar() {
+        if (mSelectedProgressBar != null) {
+            mSelectedProgressBar.setVisibility(View.GONE);
+            mSelectedProgressBar = null;
+        }
     }
 
 }

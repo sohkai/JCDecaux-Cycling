@@ -1,5 +1,6 @@
 package com.brettsun.jcdecauxcycling;
 
+import android.app.ActionBar;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -29,16 +30,24 @@ import java.util.ArrayList;
 public class StationActivity extends ListActivity {
 
     static final String STATIONS_JSON_EXTRA = "com.brettsun.jcdecauxcycling.StationsJSON";
+    static final String STATIONS_NAME_EXTRA = "com.brettsun.jcdecauxcycling.StationsName";
 
     private static final String TAG = "StationActivity";
+    private static final String ACTION_BAR_TITLE_BASE = "Stations: ";
+    private boolean listItemClicked = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_station);
 
-        // Parse stations JSON that was sent with the intent
         Intent activityIntent = getIntent();
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null && activityIntent.hasExtra(STATIONS_NAME_EXTRA)) {
+            actionBar.setTitle(ACTION_BAR_TITLE_BASE + activityIntent.getStringExtra(STATIONS_NAME_EXTRA));
+        }
+
+        // Parse stations JSON that was sent with the intent
         if (activityIntent.hasExtra(STATIONS_JSON_EXTRA)) {
             String responseString = getIntent().getStringExtra(STATIONS_JSON_EXTRA);
             ArrayList<Station> stations = null;
@@ -56,9 +65,15 @@ public class StationActivity extends ListActivity {
 
     @Override
     public void onListItemClick(ListView listView, View view, int position, long id) {
+        if (listItemClicked) {
+            // Setting the focusable traits to false does not seem to eliminate click events
+            // in the list view so this is a workaround to discard extra click events
+            // while the initial event is processing
+            return;
+        }
+
+        listItemClicked = true;
         Log.i(TAG, "Station at position " + position + " with id " + id + " clicked");
-        // Disable clicks on ListView to prevent trying to select two stations
-        listView.setFocusable(false);
 
         // Open map activity for station
         Station selectedStation = (Station) listView.getItemAtPosition(position);
@@ -69,6 +84,8 @@ public class StationActivity extends ListActivity {
         mapIntent.putExtra(StationMapActivity.STATION_LNG_EXTRA, stationCoordinates.longitude);
         Log.i(TAG, "Starting station map activity...");
         startActivity(mapIntent);
+
+        listItemClicked = false;
     }
 
 }

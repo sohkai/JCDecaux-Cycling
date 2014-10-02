@@ -27,8 +27,6 @@ import java.util.ArrayList;
  * at this granularity unless we do some bookkeeping ourselves to know which cities have
  * which "station_number"s associated with each of them for the next activity.
  * Could be done, but not too interesting right now.
- *
- * TODO: handle config changes nicely
  */
 public class LocationActivity extends ListActivity {
 
@@ -52,10 +50,15 @@ public class LocationActivity extends ListActivity {
 
     @Override
     public void onListItemClick(ListView listView, View view, int position, long id) {
+        if (mSelectedProgressBar != null) {
+            // Setting the focusable traits to false does not seem to eliminate click events
+            // in the list view so this is a workaround to discard extra click events
+            // while the initial event is processing
+            return;
+        }
+
         Log.i(TAG, "Contract at position " + position + " with id " + id + " clicked");
 
-        // Disable clicks on ListView to prevent trying to select two locations
-        listView.setFocusable(false);
         // Show progressbar to let user know we're loading stations
         mSelectedProgressBar = view.findViewById(R.id.contract_progress_bar);
         mSelectedProgressBar.setVisibility(View.VISIBLE);
@@ -115,7 +118,7 @@ public class LocationActivity extends ListActivity {
     }
 
     /********* For stations api *************/
-    private void requestStationsJson(String contractName) {
+    private void requestStationsJson(final String contractName) {
         Log.i(TAG, "Requesting stations JSON for: " + contractName);
         VolleyHandler volleyHandler = VolleyHandler.getInstance(this);
         JsonArrayRequest jsonRequest = new JsonArrayRequest(NetworkUtils.stationsUrlWithParams(contractName),
@@ -124,13 +127,15 @@ public class LocationActivity extends ListActivity {
                 public void onResponse(JSONArray response) {
                     // Got JSON response, launch the station activity and send it the station JSON
                     Log.i(TAG, "JSON request for stations succeeded");
-                    hideSelectedProgressBar();
 
                     Intent stationActivityIntent = new Intent(mContext, StationActivity.class);
                     // Must send the response as a string for the extra
                     stationActivityIntent.putExtra(StationActivity.STATIONS_JSON_EXTRA, response.toString());
+                    stationActivityIntent.putExtra(StationActivity.STATIONS_NAME_EXTRA, contractName);
                     Log.i(TAG, "Starting station activity...");
                     startActivity(stationActivityIntent);
+
+                    hideSelectedProgressBar();
                 }
             }, new Response.ErrorListener() {
                 @Override
@@ -140,7 +145,6 @@ public class LocationActivity extends ListActivity {
                     Toast toast = Toast.makeText(mContext, R.string.network_failed_text, Toast.LENGTH_SHORT);
                     toast.show();
                     hideSelectedProgressBar();
-                    getListView().setFocusable(true);
                 }
         });
 

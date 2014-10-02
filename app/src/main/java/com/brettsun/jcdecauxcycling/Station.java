@@ -50,6 +50,11 @@ public class Station {
                 int availableBikes = stationJson.getInt(AVAILABLE_BIKES_KEY);
                 int availableBikeStands = stationJson.getInt(AVAILABLE_STANDS_KEY);
 
+                // Process the strings so they're prettier
+                name = capitalizeFirstLetter(convertWordSeperatorToSpace(removeNumericPrefixFromString(name)));
+                address = capitalizeFirstLetter(convertWordSeperatorToSpace(removeNumericPrefixFromString(address)));
+                status = capitalizeFirstLetter(status);
+
                 JSONObject coordinatesJson = stationJson.getJSONObject(COORDINATES_KEY);
                 LatLng coordinates = new LatLng(coordinatesJson.getDouble(COORDINATES_LAT_KEY),
                                                     coordinatesJson.getDouble(COORDINATES_LNG_KEY));
@@ -73,6 +78,72 @@ public class Station {
         mAvailableBikes = availableBikes;
         mAvailableBikeStands = availableBikeStands;
         mCoordinates = coordinates;
+    }
+
+    /**** String utility functions for pretty printing what the API gives us ****/
+    // The API uses either '-' or '_' after a number to denote it as a prefix
+    private static final char[] PREFIX_MARKERS = new char[] { '-', '_' };
+
+    // Capitalize only the first letter in each word
+    private static String capitalizeFirstLetter(String input) {
+        input = input.toLowerCase();
+        String[] words = input.split("\\s+");
+        StringBuilder sb = new StringBuilder(input.length());
+        if (words[0].length() > 0) {
+            sb.append(Character.toUpperCase(words[0].charAt(0))).append(words[0].substring(1, words[0].length()));
+            for (int ii = 1; ii < words.length; ii++) {
+                sb.append(" ");
+                sb.append(Character.toUpperCase(words[ii].charAt(0))).append(words[ii].substring(1, words[ii].length()));
+            }
+        }
+        return sb.toString();
+    }
+
+    // Replace underscores with spaces if no spaces are found in the input
+    private static String convertWordSeperatorToSpace(String input) {
+        if (input.indexOf(' ') == -1 && input.indexOf('_') != -1) {
+            return input.replace("_", " ");
+        }
+        return input;
+    }
+
+    // Erase a number prefix in the input if there exists one
+    private static String removeNumericPrefixFromString(String input) {
+        return removeNumericPrefixFromString(input, 0);
+    }
+
+    private static String removeNumericPrefixFromString(String input, int markerIndex) {
+        char prefixMarker = PREFIX_MARKERS[markerIndex];
+        int prefixIndex = input.indexOf(prefixMarker);
+
+        PrefixTest:
+            if (prefixIndex > 0) {
+                // If we find there is a prefix marker, test the characters before it to see if it
+                // is a numeric prefix
+                for (int ii = prefixIndex - 1; ii >= 0; --ii) {
+                    char prefixTestChar = input.charAt(ii);
+                    if (prefixTestChar != ' ' && !Character.isDigit(prefixTestChar)) {
+                        // The prefix char wasn't a space or digit character so the input didn't have a number prefix
+                        // Break out to the outer brace
+                        break PrefixTest;
+                    }
+                }
+                // All characters before the prefix marker were space or digit characters, so the input
+                // contains a number prefix
+                // Ignore any trailing whitespace after the prefix
+                while (prefixIndex < input.length() && input.charAt(prefixIndex + 1) == ' ') {
+                    ++prefixIndex;
+                }
+                return input.substring(prefixIndex + 1);
+            }
+
+        // Didn't find a prefix marker character or the prefix wasn't numeric
+        // Try the next prefix marker if there is one or return the original string
+        if (markerIndex < PREFIX_MARKERS.length - 1) {
+            return removeNumericPrefixFromString(input, markerIndex + 1);
+        } else {
+            return input;
+        }
     }
 
 }

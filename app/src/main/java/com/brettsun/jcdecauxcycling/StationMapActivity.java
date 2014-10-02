@@ -38,12 +38,6 @@ public class StationMapActivity extends Activity implements MapsDirectionDialog.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_station_map);
 
-        /*
-        ActionBar actionBar = getActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }*/
-
         // Get station if available
         Intent activityIntent = getIntent();
         if (activityIntent.hasExtra(STATION_LAT_EXTRA) && activityIntent.hasExtra(STATION_LNG_EXTRA)) {
@@ -128,7 +122,8 @@ public class StationMapActivity extends Activity implements MapsDirectionDialog.
         if (stationName == null) {
             stationName = "Station";
         }
-        mMap.addMarker(new MarkerOptions().position(mStationCoordinates).title(stationName));
+        Marker stationMarker = mMap.addMarker(new MarkerOptions().position(mStationCoordinates)
+                                                                 .title(stationName));
 
         // Prompt for directions if info window clicked
         mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
@@ -138,7 +133,7 @@ public class StationMapActivity extends Activity implements MapsDirectionDialog.
                 directionsDialog.show(getFragmentManager(), DIRECTIONS_DIALOG_TAG);
             }
         });
-
+        stationMarker.showInfoWindow();
         Log.i(TAG, "Station marker added");
     }
 

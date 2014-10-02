@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingTop="7dp"
-    android:paddingBottom="7dp">
+    android:paddingBottom="7dp"
+    android:paddingRight="11dp">
 
     <TextView android:id="@+id/contract_location"
         android:layout_width="wrap_content"

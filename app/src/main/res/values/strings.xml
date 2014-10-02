@@ -7,7 +7,7 @@
     <string name="title_activity_station">Stations</string>
 
     <!-- Text -->
-    <string name="emtpy_station_list">Hmm&#8230; there doesn\'t appear to be any stations for this location. Something probably went wrong on our side. Please try again later.</string>
+    <string name="emtpy_station_list">Hmm&#8230; we weren\'t able to find any stations for this location. Something probably went wrong on our side. Please try again later.</string>
     <string name="maps_no_station">Oops! We weren\'t able to find the station requested.</string>
     <string name="network_failed_text">Oops! Something went wrong. Please check your network and retry later.</string>
 

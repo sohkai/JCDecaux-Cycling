@@ -7,8 +7,8 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 
 /**
- * Adapted from http://developer.android.com/training/volley/requestqueue.html
  * Utility singleton for accessing Volley
+ * Adapted from http://developer.android.com/training/volley/requestqueue.html
  */
 public class VolleyHandler {
     private static VolleyHandler mInstance;

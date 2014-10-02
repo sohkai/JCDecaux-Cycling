@@ -3,14 +3,17 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:paddingTop="7dp"
+    android:paddingBottom="7dp">
 
     <TextView android:id="@+id/station_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:singleLine="true"
-        android:text="ASDFASDFAASDFASDF"
+        android:textStyle="bold"
+        android:textSize="18sp"
         />
 
     <TextView android:id="@+id/station_name"
@@ -19,37 +22,36 @@
         android:layout_alignParentLeft="true"
         android:layout_toLeftOf="@id/station_status"
         android:paddingRight="40dp"
+        android:paddingBottom="2dp"
         android:singleLine="true"
-        android:text="testasdfasdfasfdasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasfd1"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        />
+
+    <TextView android:id="@+id/station_bikes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/station_status"
+        android:singleLine="true"
+        />
+
+    <TextView android:id="@+id/station_bikes_available"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/station_status"
+        android:layout_toLeftOf="@id/station_bikes"
+        android:singleLine="true"
         />
 
     <TextView android:id="@+id/station_address"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@id/station_bikes_available"
         android:layout_below="@id/station_name"
         android:singleLine="true"
-        android:text="test2"
-        />
-
-    <TextView android:id="@+id/station_available_bikes"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@id/station_address"
-        android:singleLine="true"
-        android:text="10"
-        />
-
-    <TextView android:id="@+id/station_available_stands"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_below="@id/station_address"
-        android:layout_toRightOf="@id/station_available_bikes"
-        android:paddingLeft="30dp"
-        android:singleLine="true"
-        android:text="15"
+        android:textColor="@color/DimGray"
         />
 
 </RelativeLayout>

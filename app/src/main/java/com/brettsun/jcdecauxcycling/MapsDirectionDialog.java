@@ -16,7 +16,6 @@ public class MapsDirectionDialog extends DialogFragment {
         public void onGetDirectionsClick(DialogFragment dialog);
     }
 
-    private static final String TAG = "MapsDirectionDialog";
     private MapsDirectionDialogListener mListener = null;
 
     // Attach maps activity as listener so it can send the intent for getting directions

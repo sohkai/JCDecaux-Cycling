@@ -16,8 +16,8 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 /**
- * Map activity for a station. A dialog will prompt for directions if the marker's info window
- * is clicked.
+ * Map activity to show location of a station.
+ * A dialog will prompt for directions if the marker's info window is clicked.
  */
 public class StationMapActivity extends Activity implements MapsDirectionDialog.MapsDirectionDialogListener {
 
